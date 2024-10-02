@@ -197,7 +197,7 @@ resource "aws_s3_bucket_public_access_block" "s3_pub_acc" {
 
 
 #Creating Load balancer (ALB)
-resource "aws_alb" "My_alb" {
+resource "aws_lb" "My_lb" {
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.mysg.id]
@@ -206,7 +206,7 @@ resource "aws_alb" "My_alb" {
 
   access_logs {
     bucket  = aws_s3_bucket.Terrform_VPC_Bucket.id
-    prefix  = "My_alb-lb"
+    prefix  = "My_lb-lb"
     enabled = true
   }
 
@@ -216,7 +216,7 @@ resource "aws_alb" "My_alb" {
 }
 
 #Creating Target Group for ALB
-resource "aws_alb_target_group" "alb_tg" {
+resource "aws_lb_target_group" "lb_tg" {
   port     = 80
   protocol = "HTTP"
   vpc_id   = aws_vpc.my_project_vpc.id
@@ -230,27 +230,27 @@ resource "aws_alb_target_group" "alb_tg" {
 }
 
 #ALB Target grp attachment to Server-1 instance
-resource "aws_alb_target_group_attachment" "S1_tg" {
+resource "aws_lb_target_group_attachment" "S1_tg" {
   target_id        = aws_instance.ser1.id
-  target_group_arn = aws_alb_target_group.alb_tg.arn
+  target_group_arn = aws_lb_target_group.lb_tg.arn
   port             = 80
 }
 
 #ALB Target grp attachment to Server-2 instance
 resource "aws_alb_target_group_attachment" "S2_tg" {
   target_id        = aws_instance.ser2.id
-  target_group_arn = aws_alb_target_group.alb_tg.arn
+   target_group_arn = aws_lb_target_group.lb_tg.arn
   port             = 80
 }
 
 #ALB Listener attachment
-resource "aws_alb_listener" "alb_lis" {
-  load_balancer_arn = aws_alb.My_alb.arn
+resource "aws_lb_listener" "lb_lis" {
+  load_balancer_arn = aws_lb.My_lb.arn
   port = 80
   protocol = "HTTP"
 
   default_action {
-    target_group_arn = aws_alb_target_group.alb_tg.arn
+    target_group_arn = aws_lb_target_group.lb_tg.arn
     type = "forward"
   }
 }

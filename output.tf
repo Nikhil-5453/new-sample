@@ -19,5 +19,5 @@ output "aws_route_table" {
 }
 
 output "ALB_DNS" {
-  value = aws_alb.My_alb.dns_name
+  value = aws_lb.My_lb.dns_name
 }
