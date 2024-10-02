@@ -237,7 +237,7 @@ resource "aws_lb_target_group_attachment" "S1_tg" {
 }
 
 #ALB Target grp attachment to Server-2 instance
-resource "aws_alb_target_group_attachment" "S2_tg" {
+resource "aws_lb_target_group_attachment" "S2_tg" {
   target_id        = aws_instance.ser2.id
    target_group_arn = aws_lb_target_group.lb_tg.arn
   port             = 80
